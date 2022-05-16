@@ -4,9 +4,9 @@
 
 ### Dependencies
 ```JavaScript
-   master   npm i -D @wordpress/scripts
-   master   npm install @wordpress/i18n
-   master   npm install @wordpress/blocks
+$ npm i -D @wordpress/scripts
+$ npm install @wordpress/i18n
+$ npm install @wordpress/blocks
 ```
 
 
@@ -28,5 +28,5 @@
 
 ## To run:
 ```JavaScript
- master   npm run start
+$ npm run start
 ```
