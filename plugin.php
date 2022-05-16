@@ -16,7 +16,7 @@ final class WP_Your_Class_Name {
    
   /* ====== Contruct Function ====== */
 
-  private function __contruct() {
+  private function __construct() {
     $this->plugin_constants();
     add_action( 'plugins_loaded', [ $this, 'init_plugin' ] );
   }
@@ -27,10 +27,9 @@ final class WP_Your_Class_Name {
   public function plugin_constants() {
     define( 'PREFIX_VERSION', self::VERSION );
     define( 'PREFIX_PLUGIN_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-    define( 'PREFIX_PLUGIN_URL', trailingslashit( plugin_url( '/',  __FILE__ ) ) );
+    define( 'PREFIX_PLUGIN_URL', trailingslashit( plugins_url( '/', __FILE__ ) ) );
   }
 
-   
   /* ====== Singleton Instance ====== */
   
   public static function init() {
@@ -54,20 +53,31 @@ final class WP_Your_Class_Name {
   public function enqueue_scripts() {
     add_action( 'enqueue_block_editor_assets', [ $this, 'register_block_editor_assets' ] );
     add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_scripts' ] );
-    add_action( 'admin_enqueue_scripts', [ $this, 'register_public_scripts' ] );
+    add_action( 'wp_enqueue_scripts', [ $this, 'register_public_scripts' ] );
     add_action( 'init', [ $this, 'register_blocks'] );
   }
  
   /* ====== Register Block Editor Assets ====== */
 
   public function register_block_editor_assets() {
-
+    wp_enqueue_script(
+      'prefix-wp-gutenberg-plugin-starter',
+      PREFIX_PLUGIN_URL . '/build/index.js',
+      [
+        'wp-blocks',
+        'wp-editor',
+        'wp-i18n',
+        'wp-element',
+        'wp-components',
+        'wp-data'
+      ]
+    );
   }
 
   /* ====== Register Admin Scripts ====== */
 
   public function register_admin_scripts() {
-     wp_enqueue_scripts(
+     wp_enqueue_script(
       'prefix-editor',
       PREFIX_PLUGIN_URL . '/assets/js/editor.js',
       rand(),
@@ -86,7 +96,7 @@ final class WP_Your_Class_Name {
   /* ====== Register Public Scripts ====== */
 
   public function register_public_scripts() {
-    wp_enqueue_scripts(
+    wp_enqueue_script(
       'prefix-public',
       PREFIX_PLUGIN_URL . '/assets/js/scripts.js',
       rand(),
@@ -106,9 +116,9 @@ final class WP_Your_Class_Name {
 
   public function register_blocks() {
     register_block_type( 'prefix-blocks/block', [
-      'style'           => 'prefix-block',
+      'style'           => 'prefix-public',
       'editor_style'    => 'prefix-editor',
-      'editor_scripts'  => ''
+      'editor_scripts'  => 'prefix-wp-gutenberg-plugin-starter'
     ] );
   }
  
